@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_countdown_timer/index.dart';
 
 typedef CountdownTimerWidgetBuilder = Widget Function(
-    BuildContext context, CurrentRemainingTime? time);
+    BuildContext context, CurrentRemainingTime? time, Widget endWidget);
 
 /// A Countdown.
 class CountdownTimer extends StatefulWidget {
@@ -45,13 +45,11 @@ class CountdownTimer extends StatefulWidget {
 class _CountDownState extends State<CountdownTimer> {
   late CountdownTimerController controller;
 
-  CurrentRemainingTime? get currentRemainingTime =>
-      controller.currentRemainingTime;
+  CurrentRemainingTime? get currentRemainingTime => controller.currentRemainingTime;
 
   Widget get endWidget => widget.endWidget;
 
-  CountdownTimerWidgetBuilder get widgetBuilder =>
-      widget.widgetBuilder ?? builderCountdownTimer;
+  CountdownTimerWidgetBuilder get widgetBuilder => widget.widgetBuilder ?? builderCountdownTimer;
 
   TextStyle? get textStyle => widget.textStyle;
 
@@ -63,8 +61,7 @@ class _CountDownState extends State<CountdownTimer> {
 
   ///Generate countdown controller.
   initController() {
-    controller = widget.controller ??
-        CountdownTimerController(endTime: widget.endTime!, onEnd: widget.onEnd);
+    controller = widget.controller ?? CountdownTimerController(endTime: widget.endTime!, onEnd: widget.onEnd);
     if (controller.isRunning == false) {
       controller.start();
     }
@@ -78,8 +75,7 @@ class _CountDownState extends State<CountdownTimer> {
   @override
   void didUpdateWidget(CountdownTimer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.endTime != widget.endTime ||
-        widget.controller != oldWidget.controller) {
+    if (oldWidget.endTime != widget.endTime || widget.controller != oldWidget.controller) {
       controller.dispose();
       initController();
     }
@@ -87,11 +83,10 @@ class _CountDownState extends State<CountdownTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return widgetBuilder(context, currentRemainingTime);
+    return widgetBuilder(context, currentRemainingTime, endWidget);
   }
 
-  Widget builderCountdownTimer(
-      BuildContext context, CurrentRemainingTime? time) {
+  Widget builderCountdownTimer(BuildContext context, CurrentRemainingTime? time, Widget endWidget) {
     if (time == null) {
       return endWidget;
     }
